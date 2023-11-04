@@ -16,7 +16,6 @@ public class MazeGame extends Application {
     }
 
     public void start(Stage primaryStage) {
-
         primaryStage.setTitle("MazeGame");
         primaryStage.setMaximized(true);
         GridPane layout = new GridPane();
@@ -26,21 +25,28 @@ public class MazeGame extends Application {
         ImageView img; //dummy variable to hold individual image
         FileInputStream inputstream = null;
         try {
-            inputstream = new FileInputStream("Hackathon_demo\\dirt.jpg");
+            inputstream = new FileInputStream("Hackathon_demo\\floor.jpg");
         } catch (FileNotFoundException e) {
             System.out.println("File not found");
         } 
-        Image drt = new Image(inputstream); 
+        Image fl = new Image(inputstream); 
         for(int i = 0; i < numrows; i++){
             for(int j = 0; j < numcols; j++){
                 img = new ImageView();
-                img.setImage(drt);
+                img.setImage(fl);
                 img.setFitHeight(1900/numcols);
                 img.setFitWidth(900/numrows);                
                 iv[i][j] = img;
                 layout.add(img, j, i);
             }
         }
+        try {
+            inputstream = new FileInputStream("Hackathon_demo\\front-overlay.jpg");
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } 
+        Image chr = new Image(inputstream);
+        iv[numrows-1][0].setImage(chr);
         try {
             inputstream = new FileInputStream("Hackathon_demo\\wall.png");
         } catch (FileNotFoundException e) {
@@ -74,14 +80,6 @@ public class MazeGame extends Application {
             }
         }
         Kruskals(iv);
-        // Create a label
-        Label label = new Label("Hello, JavaFX!");
-
- 
-        // Create a button
-        Button button = new Button("Click Me");
-        button.setOnAction(e -> label.setText("Button Clicked!"));
-
         // Create a layout and add the label and button to it
          // 10 is the spacing between elements
         //layout.getChildren().addAll(label, button);
@@ -134,12 +132,12 @@ public class MazeGame extends Application {
         
         FileInputStream inputstream = null;
         try {
-            inputstream = new FileInputStream("Hackathon_demo\\dirt.jpg");
+            inputstream = new FileInputStream("Hackathon_demo\\floor.jpg");
         }
         catch (FileNotFoundException e) {
             System.out.println("File not found");
         } 
-        Image drt = new Image(inputstream);
+        Image fl = new Image(inputstream);
         
         while (head < numedges){
             pair randEdge = edgeTileList.get(head);// Keep track of the first element
@@ -164,7 +162,7 @@ public class MazeGame extends Application {
                 }
 
                 pathtiles[path2.getRow()][path2.getColumn()] = pathtiles[path1.getRow()][path1.getColumn()];
-                iv[randEdge.getRow()][randEdge.getColumn()].setImage(drt);
+                iv[randEdge.getRow()][randEdge.getColumn()].setImage(fl);
             }
             head++;
         }
