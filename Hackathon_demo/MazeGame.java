@@ -1,13 +1,13 @@
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import javafx.application.Application;
-import javafx.event.EventHandler;
+import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.*;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.*;
@@ -25,8 +25,6 @@ public class MazeGame extends Application {
         primaryStage.setMaximized(true);
         GridPane layout = new GridPane();
 
-
-
         pair player = new pair(numrows - 1, 0);
         pair centre = new pair(numrows - 3, 2);
         
@@ -42,7 +40,6 @@ public class MazeGame extends Application {
                 img.setFitWidth(900/5);    
                 img.setId("p");
                 iv[i][j] = img;
-                
             }
         }
         updateZoom(centre, zoom, iv, layout);
@@ -50,7 +47,7 @@ public class MazeGame extends Application {
         iv[numrows-1][0].setImage(chr); 
         Image door = getimg("chest.png");
         iv[0][numcols - 1].setImage(door); 
-        iv[0][numcols - 1].setId("GOAL");
+        iv[0][numcols-1].setId("GOAL");
         Image wall = getimg("brick.png");
         for(int i = 0; i < (numrows/2); i++){
             for(int j = 0; j < numcols;j++){
@@ -121,12 +118,8 @@ public class MazeGame extends Application {
             boolean isWall = iv[tmp.getRow()][tmp.getColumn()].getId().equals("w");
             if(!isWall){
                 if (iv[tmp.getRow()][tmp.getColumn()].getId().equals("GOAL")) {
-                    Alert alert = new Alert(AlertType.CONFIRMATION);
-                    alert.setHeaderText("You completed the maze!");
-                    alert.setTitle("Well done!");
-                    alert.setContentText("You found the Treasure!");
-                    alert.showAndWait();
-                    primaryStage.close();
+                    showEndgameScreen(primaryStage);
+                    return; // Exit the method early since the game is over
                 }
                 iv[tmp.getRow()][tmp.getColumn()].setImage(pl);
                 iv[player.getRow()][player.getColumn()].setImage(path);
@@ -256,5 +249,69 @@ public class MazeGame extends Application {
         }
     }
 
-    
+    public void showEndgameScreen(Stage primaryStage) {
+        // Create a new Stage for the endgame screen
+        Stage endgameStage = new Stage();
+
+        // Make it full screen
+        endgameStage.initStyle(StageStyle.UNDECORATED); // Remove window decorations
+        endgameStage.setFullScreen(true);
+        endgameStage.setFullScreenExitHint(""); // Hide the exit full screen message
+
+        // Create a Pane with a custom background image
+        Pane endgamePane = new Pane();
+        
+        // Set a background image
+        try {
+        // Set a background image
+        Image backgroundImage = new Image("Hackathon_demo\\maze_bg.jpg"); // true parameter for background loading
+        BackgroundImage backgroundImg = new BackgroundImage(
+                backgroundImage,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false));
+        endgamePane.setBackground(new Background(backgroundImg));
+    } catch (IllegalArgumentException e) {
+        System.out.println("Error loading background image: " + e.getMessage());
+        endgamePane.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+    }
+
+        // You can add additional UI elements here, such as a message
+        Label endgameLabel = new Label("Congratulations! You have completed the maze!");
+        endgameLabel.setTextFill(Color.WHITE); // Set text color
+        endgameLabel.setStyle("-fx-font-size: 50px; -fx-alignment: center;"); // Set font size and center alignment
+        endgameLabel.setMaxWidth(Double.MAX_VALUE); // Set label width to the maximum
+        endgameLabel.setAlignment(Pos.CENTER); // Center the label text
+        
+        // Add the label to the pane and center it within the pane
+        endgamePane.getChildren().add(endgameLabel);
+        endgameLabel.setLayoutX(0);
+        endgameLabel.setLayoutY(primaryStage.getHeight() / 4); // Position label at 1/4th the height of the screen for aesthetic vertical centering
+
+        Button exitButton = new Button("Exit");
+        exitButton.setStyle("-fx-font-size: 30px;"); // Make button text bigger
+        exitButton.setPrefHeight(60); // Make button bigger
+        exitButton.setPrefWidth(200);
+        exitButton.setOnAction(e -> {
+            // What you want to do on button click; for example:
+            Platform.exit();
+        });
+        // Center the button horizontally and place it below the label
+        exitButton.setLayoutX(primaryStage.getWidth() / 2 - exitButton.getPrefWidth() / 2);
+        exitButton.setLayoutY(primaryStage.getHeight() / 2); // Position it at half the height of the screen
+
+        // Add everything to the pane
+        endgamePane.getChildren().add(exitButton);
+
+        // Create a scene with the endgame pane
+        Scene endgameScene = new Scene(endgamePane, primaryStage.getWidth(), primaryStage.getHeight());
+
+        // Set the scene and show the stage
+        endgameStage.setScene(endgameScene);
+        endgameStage.show();
+
+        // Hide the main game window
+        primaryStage.hide();
+    }
 }
