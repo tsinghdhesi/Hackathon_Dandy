@@ -28,7 +28,7 @@ public class MazeGame extends Application {
 
 
         pair player = new pair(numrows - 1, 0);
-        pair centre = new pair(numrows - 5, 0);
+        pair centre = new pair(numrows - 3, 2);
         
         ImageView[][] iv = new ImageView[numrows][numcols];//initialising grid of images
         ImageView[][] zoom = new ImageView[5][5];
@@ -117,70 +117,51 @@ public class MazeGame extends Application {
             tmp = new pair(player.getRow(), player.getColumn() + 1);
         }
     
-        boolean isWall = iv[tmp.getRow()][tmp.getColumn()].getId().equals("w");
-    
-        if (!isWall && checkBounds(tmp)) {
-            if (iv[tmp.getRow()][tmp.getColumn()].getId().equals("GOAL")) {
-                Alert alert = new Alert(AlertType.CONFIRMATION);
-                alert.setHeaderText("You completed the maze!");
-                alert.setTitle("Well done!");
-                alert.setContentText("You found the Treasure!");
-                alert.showAndWait();
-                primaryStage.close();
-            }
-            iv[tmp.getRow()][tmp.getColumn()].setImage(pl);
-            iv[player.getRow()][player.getColumn()].setImage(path);
-            player.setRow(tmp.getRow());
-            player.setColumn(tmp.getColumn());
-    
-            // Check if the player's movement goes beyond the bounds of the 5x5 zoomed screen
-            if (!checkBoundsZoom(centre, tmp)) {
-                centre = calculateNewCentre(tmp);
-                updateZoom(centre, zoom, iv, layout);
+        if (checkBounds(tmp)) {
+            boolean isWall = iv[tmp.getRow()][tmp.getColumn()].getId().equals("w");
+            if(!isWall){
+                if (iv[tmp.getRow()][tmp.getColumn()].getId().equals("GOAL")) {
+                    Alert alert = new Alert(AlertType.CONFIRMATION);
+                    alert.setHeaderText("You completed the maze!");
+                    alert.setTitle("Well done!");
+                    alert.setContentText("You found the Treasure!");
+                    alert.showAndWait();
+                    primaryStage.close();
+                }
+                iv[tmp.getRow()][tmp.getColumn()].setImage(pl);
+                iv[player.getRow()][player.getColumn()].setImage(path);
+                player.setRow(tmp.getRow());
+                player.setColumn(tmp.getColumn());
+                checkBoundsZoom(centre, tmp, zoom, iv, layout);
             }
         }
     }
-    
-    public boolean checkAlternateBoundsZoom(pair tmp, pair centre){
+
+    public void checkBoundsZoom(pair centre, pair tmp, ImageView[][] zoom, ImageView[][] iv, GridPane layout) {
         if(tmp.getColumn() >= 2 && tmp.getColumn() <= numcols - 3 && tmp.getRow() >= numrows - 2){
             centre.setColumn(tmp.getColumn());
+            updateZoom(centre, zoom, iv, layout);
         } else if(tmp.getColumn() >= numcols - 2 && tmp.getRow() <= numrows - 3 && tmp.getRow() >= 2){
             centre.setRow(tmp.getRow());
+            updateZoom(centre, zoom, iv, layout);
         } else if(tmp.getColumn() <= numcols - 2 && tmp.getColumn() >= 2 && tmp.getRow() <= 1){
             centre.setColumn(tmp.getColumn());
+            updateZoom(centre, zoom, iv, layout);
         } else if(tmp.getColumn() <= 1 && tmp.getRow() >= 2 && tmp.getRow() <= numrows - 3){
             centre.setRow(tmp.getRow());
+            updateZoom(centre, zoom, iv, layout);
         } else if(tmp.getRow() >= 2 && tmp.getRow() <= numrows - 3 && tmp.getColumn() >= 2 && tmp.getColumn() <= numcols - 3){
             centre.setRow(tmp.getRow());
             centre.setColumn(tmp.getColumn());
+            updateZoom(centre, zoom, iv, layout);
         }
-        return false;
-    }
-
-    public boolean checkBoundsZoom(pair centre, pair tmp) {
-        int minRow = Math.max(0, centre.getRow() - 2);
-        int maxRow = Math.min(numrows - 1, centre.getRow() + 2);
-        int minCol = Math.max(0, centre.getColumn() - 2);
-        int maxCol = Math.min(numcols - 1, centre.getColumn() + 2);
-    
-        return (tmp.getRow() >= minRow && tmp.getRow() <= maxRow && tmp.getColumn() >= minCol && tmp.getColumn() <= maxCol);
-    }
-    
-    
-    
-    
-    public pair calculateNewCentre(pair tmp) {
-        // Calculate and return the new center position for the 5x5 zoomed screen based on tmp
-        int newCentreRow = tmp.getRow() - 2; // Adjust as needed
-        int newCentreCol = tmp.getColumn() - 2; // Adjust as needed
-        return new pair(newCentreRow, newCentreCol);
     }
     
     public void updateZoom(pair centre, ImageView[][] zoom, ImageView[][] iv, GridPane layout) {
         ImageView img;
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                zoom[i][j] = iv[centre.getRow() + i][centre.getColumn() + j];
+        for (int i = -2; i < 3; i++) {
+            for (int j = -2; j < 3; j++) {
+                zoom[i + 2][j + 2] = iv[centre.getRow() + i][centre.getColumn() + j];
             }
         }
         layout.getChildren().clear(); // Clear the old zoomed screen
@@ -192,7 +173,6 @@ public class MazeGame extends Application {
         }
     }
     
-
     public boolean checkBounds(pair tmp){
         if(tmp.getRow() < numrows && tmp.getRow() >= 0 && tmp.getColumn() < numcols && tmp.getColumn() >= 0){
             return true;
