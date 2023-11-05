@@ -13,6 +13,12 @@ public class pair {
     public int getColumn(){
         return col;
     }
+    public void setRow(int val){
+        row = val;
+    }
+    public void setColumn(int val){
+        col = val;
+    }
     public boolean equals(pair x){
         if(x.getRow() == row && x.getColumn() == col){
             return true;
