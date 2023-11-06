@@ -2,7 +2,9 @@
 
 # aMAZEing Game Project
 
-Welcome to the repository of 'aMAZEing', a game that infuses the nostalgic labyrinth puzzles with advanced technology. This game is the product of innovative algorithm application and a testament to the power of collaborative development.
+Welcome to the repository of 'aMAZEing', a game that infuses the nostalgic labyrinth puzzles and leverages Kruskal's algorithm-based design. It has enhanced UI powered by JavaFX. 
+
+![aMAZEing Logo](https://github.com/tsinghdhesi/Hackathon_Dandy/assets/135261955/9eb0a7cf-8b84-4af7-8b73-45830ba76d1d)
 
 ## DEMO
 
