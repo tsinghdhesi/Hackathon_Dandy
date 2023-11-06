@@ -4,6 +4,11 @@
 
 Welcome to the repository of 'aMAZEing', a game that infuses the nostalgic labyrinth puzzles with advanced technology. This game is the product of innovative algorithm application and a testament to the power of collaborative development.
 
+## DEMO
+
+[Game Demo](https://www.youtube.com/watch?v=Y4ft3o6H7fE)
+
+
 ## Overview
 
 Developed with Java and JavaFX, 'aMAZEing' leverages a customized Kruskal's algorithm to craft complex mazes. Players are immersed in a dungeon-themed adventure, navigating through a series of intricate paths and dead-ends.
