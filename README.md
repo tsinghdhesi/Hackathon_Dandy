@@ -38,8 +38,7 @@ Our hackathon journey enriched us with:
 
 ## Acknowledgments
 
-Thank you to DandyHacks and MLH organizers for their support and the opportunity that made this project possible. 
-Thank you to Colgate Coder Club. 
----
+- Thank you to DandyHacks and MLH organizers for their support and the opportunity that made this project possible. 
+- Thank you to Colgate Coder Club. 
 
 Dive into the 'aMAZEing' maze and enjoy the challenge! For feedback or questions, please use the Issues section of this repository.
